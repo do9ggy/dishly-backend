@@ -2,7 +2,7 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Friend, Post, User, WebSession } from "./app";
+import { Comment, Dish, Friend, Post, User, WebSession } from "./app";
 import { PostDoc, PostOptions } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
@@ -90,6 +90,39 @@ class Routes {
     return Post.delete(_id);
   }
 
+  @Router.get("/comments")
+  async getComments(post?: string) {
+    let comments;
+    if (post) {
+      const id = (await User.getUserByUsername(post))._id;
+      comments = await Comment.getByAuthor(id);
+    } else {
+      comments = await Comment.getComments({});
+    }
+    return Responses.comments(comments);
+  }
+
+  @Router.post("/comments")
+  async createComment(session: WebSessionDoc, post: ObjectId, content: string) {
+    const user = WebSession.getUser(session);
+    const created = await Comment.create(user, content);
+    return { msg: created.msg, comment: await Responses.comment(created.comment) };
+  }
+
+  @Router.patch("/comments/:_id")
+  async updateComment(session: WebSessionDoc, _id: ObjectId, update: Partial<PostDoc>) {
+    const user = WebSession.getUser(session);
+    await Comment.isAuthor(user, _id);
+    return await Comment.update(_id, update);
+  }
+
+  @Router.delete("/comments/:_id")
+  async deleteComment(session: WebSessionDoc, _id: ObjectId) {
+    const user = WebSession.getUser(session);
+    await Comment.isAuthor(user, _id);
+    return Comment.delete(_id);
+  }
+
   @Router.get("/friends")
   async getFriends(session: WebSessionDoc) {
     const user = WebSession.getUser(session);
@@ -136,6 +169,54 @@ class Routes {
     const fromId = (await User.getUserByUsername(from))._id;
     return await Friend.rejectRequest(fromId, user);
   }
+
+  @Router.get("/dishes/:dishes")
+  async getDishes(dish: ObjectId) {
+    return await Dish.getDishes(dish);
+  }
+
+  @Router.post("/dishes")
+  async addDish(session: WebSessionDoc, dish: ObjectId) {
+    const user = WebSession.getUser(session);
+    // return await Dish.addDish(dish, user);
+  }
+
+  @Router.patch("/dishes")
+  async updateDish(session: WebSessionDoc, dish: Partial<UserDoc>) {
+    const user = WebSession.getUser(session);
+    return await Dish.updateDish(user, dish);
+  }
+
+  @Router.delete("/dishes")
+  async deleteDish(dish: ObjectId, session: WebSessionDoc) {
+    const user = WebSession.getUser(session);
+    WebSession.end(session);
+    return await Dish.deleteDish(dish);
+  }
+
+  @Router.get("/locations/:locations")
+  async getLocation(location: ObjectId) {}
+
+  @Router.post("/locations")
+  async addLocation(session: WebSessionDoc, location: ObjectId) {}
+
+  @Router.patch("/locations")
+  async updateLocations(session: WebSessionDoc, location: Partial<UserDoc>) {}
+
+  @Router.delete("/locations")
+  async deleteLocation(location: ObjectId, session: WebSessionDoc) {}
+
+  @Router.get("/restaurants/:restaurants")
+  async getRestaurant(restaurant: ObjectId) {}
+
+  @Router.post("/restaurants")
+  async addRestaurant(session: WebSessionDoc, restaurant: ObjectId) {}
+
+  @Router.patch("/restaurants")
+  async updateRestaurant(session: WebSessionDoc, restaurant: Partial<UserDoc>) {}
+
+  @Router.delete("/restaurants")
+  async deleteRestaurant(restaurant: ObjectId, session: WebSessionDoc) {}
 }
 
 export default getExpressRouter(new Routes());
