@@ -3,7 +3,7 @@ import DocCollection, { BaseDoc } from "../framework/doc";
 import { PostDoc } from "./post";
 
 export interface DishDoc extends BaseDoc {
-  name: ObjectId;
+  name: String;
   post: PostDoc;
   location: ObjectId;
 }
@@ -15,7 +15,7 @@ export default class DishConcept {
     return await this.dishes.readOne({ dish });
   }
 
-  async addDish(name: ObjectId, post: PostDoc, location: ObjectId) {
+  async addDish(name: String, post: PostDoc, location: ObjectId) {
     const _id = await this.dishes.createOne({ name, post, location });
     return { msg: "Post successfully created!", post: await this.dishes.readOne({ _id }) };
   }

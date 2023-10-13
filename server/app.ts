@@ -1,8 +1,9 @@
 import CommentConcept from "./concepts/comment";
 import DishConcept from "./concepts/dish";
 import FriendConcept from "./concepts/friend";
+import LocationConcept from "./concepts/location";
 import PostConcept from "./concepts/post";
-import { default as LocationConcept, default as RestaurantConcept } from "./concepts/restaurant";
+import RestaurantConcept from "./concepts/restaurant";
 import UserConcept from "./concepts/user";
 import WebSessionConcept from "./concepts/websession";
 

@@ -2,7 +2,8 @@ import { ObjectId } from "mongodb";
 
 import { Router, getExpressRouter } from "./framework/router";
 
-import { Comment, Dish, Friend, Post, User, WebSession } from "./app";
+import { Comment, Dish, Friend, Location, Post, Restaurant, User, WebSession } from "./app";
+import { DishDoc } from "./concepts/dish";
 import { PostDoc, PostOptions } from "./concepts/post";
 import { UserDoc } from "./concepts/user";
 import { WebSessionDoc } from "./concepts/websession";
@@ -176,9 +177,10 @@ class Routes {
   }
 
   @Router.post("/dishes")
-  async addDish(session: WebSessionDoc, dish: ObjectId) {
+  async addDish(session: WebSessionDoc, dish: DishDoc, location: ObjectId) {
     const user = WebSession.getUser(session);
-    // return await Dish.addDish(dish, user);
+    const post = await Post.getPosts(user);
+    // return await Dish.addDish(post[0]._id, dish, location);
   }
 
   @Router.patch("/dishes")
@@ -188,35 +190,49 @@ class Routes {
   }
 
   @Router.delete("/dishes")
-  async deleteDish(dish: ObjectId, session: WebSessionDoc) {
-    const user = WebSession.getUser(session);
-    WebSession.end(session);
+  async deleteDish(dish: ObjectId) {
     return await Dish.deleteDish(dish);
   }
 
   @Router.get("/locations/:locations")
-  async getLocation(location: ObjectId) {}
+  async getLocation(location: ObjectId) {
+    return await Location.getLocation(location);
+  }
 
   @Router.post("/locations")
-  async addLocation(session: WebSessionDoc, location: ObjectId) {}
+  async addLocation(post: ObjectId, location: string) {
+    return await Location.createLocation(post, location);
+  }
 
   @Router.patch("/locations")
-  async updateLocations(session: WebSessionDoc, location: Partial<UserDoc>) {}
+  async updateLocations(_id: ObjectId, location: Partial<UserDoc>) {
+    return await Location.updateLocation(_id, location);
+  }
 
   @Router.delete("/locations")
-  async deleteLocation(location: ObjectId, session: WebSessionDoc) {}
+  async deleteLocation(_id: ObjectId) {
+    return await Location.deleteLocation(_id);
+  }
 
   @Router.get("/restaurants/:restaurants")
-  async getRestaurant(restaurant: ObjectId) {}
+  async getRestaurant(restaurant: ObjectId) {
+    return await Restaurant.getRestaurant(restaurant);
+  }
 
   @Router.post("/restaurants")
-  async addRestaurant(session: WebSessionDoc, restaurant: ObjectId) {}
+  async addRestaurant(_id: ObjectId, location: ObjectId) {
+    return await Restaurant.createRestaurant(_id, location);
+  }
 
   @Router.patch("/restaurants")
-  async updateRestaurant(session: WebSessionDoc, restaurant: Partial<UserDoc>) {}
+  async updateRestaurant(_id: ObjectId, address: Partial<UserDoc>) {
+    return await Restaurant.updateRestaurant(_id, address);
+  }
 
   @Router.delete("/restaurants")
-  async deleteRestaurant(restaurant: ObjectId, session: WebSessionDoc) {}
+  async deleteRestaurant(restaurant: ObjectId) {
+    return await Restaurant.deleteRestaurant(restaurant);
+  }
 }
 
 export default getExpressRouter(new Routes());

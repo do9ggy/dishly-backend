@@ -69,7 +69,7 @@ const operations: operation[] = [
     name: "Update Post",
     endpoint: "/api/posts/:id",
     method: "PATCH",
-    fields: { id: "input", update: { content: "input", options: { backgroundColor: "input" } } },
+    fields: { id: "input", update: { content: "input" } },
   },
   {
     name: "Delete Post",
@@ -112,12 +112,71 @@ const operations: operation[] = [
     name: "Update Dish",
     endpoint: "/api/dishes/:id",
     method: "PATCH",
-    fields: { id: "input", update: { content: "input", options: { backgroundColor: "input" } } },
+    fields: { id: "input", update: { content: "input" } },
   },
   {
     name: "Delete Dish",
     endpoint: "/api/dishes/:id",
     method: "DELETE",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Get Dish",
+    endpoint: "/api/dishes/:id",
+    method: "GET",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Create Location",
+    endpoint: "/api/locations",
+    method: "POST",
+    fields: { content: "input" },
+  },
+  {
+    name: "Update Location",
+    endpoint: "/api/locations/:id",
+    method: "PATCH",
+    fields: { id: "input", update: { content: "input" } },
+  },
+  {
+    name: "Delete Location",
+    endpoint: "/api/locations/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Get Location",
+    endpoint: "/api/locations/:id",
+    method: "GET",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Create Restaurant",
+    endpoint: "/api/Restaurants",
+    method: "POST",
+    fields: { content: "input" },
+  },
+  {
+    name: "Update Restaurant",
+    endpoint: "/api/Restaurants/:id",
+    method: "PATCH",
+    fields: { id: "input", update: { content: "input" } },
+  },
+  {
+    name: "Delete Restaurant",
+    endpoint: "/api/Restaurants/:id",
+    method: "DELETE",
+    fields: { id: "input" },
+  },
+
+  {
+    name: "Get Restaurant",
+    endpoint: "/api/Restaurants/:id",
+    method: "GET",
     fields: { id: "input" },
   },
 ];
